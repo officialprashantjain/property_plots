@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens ─── */
+@theme inline {
+  /* Font */
+  --font-sans: var(--font-inter);
+
+  /* Brand Colors */
+  --color-primary:        #1D4ED8; /* Blue-700 - Main brand color */
+  --color-primary-hover:  #1E40AF; /* Blue-800 - Hover state */
+  --color-secondary:      #F59E0B; /* Amber-500 - Accent/Highlight */
+
+  /* Neutral Backgrounds */
+  --color-background:     #F8FAFC; /* Slate-50 - Page bg */
+  --color-surface:        #FFFFFF; /* Cards, panels */
+  --color-border:         #E2E8F0; /* Slate-200 - Subtle borders */
+
+  /* Text */
+  --color-foreground:     #0F172A; /* Slate-900 - Main text */
+  --color-muted:          #64748B; /* Slate-500 - Subtitles, labels */
+  --color-muted-dark:     #94A3B8; /* Slate-400 - Placeholders */
+
+  /* Status Colors */
+  --color-success:        #16A34A; /* Green-600 */
+  --color-warning:        #D97706; /* Amber-600 */
+  --color-danger:         #DC2626; /* Red-600 */
+  --color-info:           #0891B2; /* Cyan-600 */
+
+  /* Sidebar specific */
+  --color-sidebar-bg:     #0F172A; /* Slate-900 */
+  --color-sidebar-text:   #CBD5E1; /* Slate-300 */
+  --color-sidebar-active: #1D4ED8; /* Same as primary */
+}
+
+/* ─── Base Styles ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans), sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
