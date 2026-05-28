@@ -1,0 +1,31 @@
+# Default Node modules and logs
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Backend Uploads (Ignore all files but keep the uploads folder itself)
+propiz/public/uploads/*
+!propiz/public/uploads/.gitkeep
+
+# Frontend Build folders (For React/Next.js/Vue)
+dist/
+build/
+.next/
+out/
+
+# Editor and OS specific files
+.vscode/
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
