@@ -8,9 +8,9 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
           { label: "Total Properties", value: "124", color: "text-primary" },
-          { label: "Active Agents", value: "18", color: "text-success" },
-          { label: "Blogs Published", value: "37", color: "text-secondary" },
-          { label: "Pending Reviews", value: "9", color: "text-danger" },
+          { label: "Active Agents", value: "18", color: "text-primary" },
+          { label: "Blogs Published", value: "37", color: "text-primary" },
+          { label: "Clients Requests", value: "9", color: "text-primary" },
         ].map((card) => (
           <div key={card.label} className="bg-surface border border-border rounded-xl p-5 shadow-sm">
             <p className="text-sm text-muted mb-1">{card.label}</p>
