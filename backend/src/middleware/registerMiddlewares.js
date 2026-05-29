@@ -17,7 +17,7 @@ function registerMiddlewares(app) {
     .use(express.json())
     .use(express.urlencoded({ extended: true }))
     .use(hpp({}))
-    .use(helmet())
+    .use(helmet({ crossOriginResourcePolicy: false }))
     .use(
       cors({
         origin:
