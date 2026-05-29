@@ -15,7 +15,8 @@ import {
   BookOpen, 
   Settings, 
   LogOut,
-  X
+  X,
+  Search
 } from "lucide-react";
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
     group: "Main",
     links: [
       { label: "Dashboard", href: "/", icon: LayoutDashboard },
+      { label: "Search Config", href: "/search-config", icon: Search },
       { label: "Properties", href: "/properties", icon: Home },
     ],
   },

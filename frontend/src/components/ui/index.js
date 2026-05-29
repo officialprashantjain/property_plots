@@ -8,4 +8,6 @@ export { default as Select } from './Select';
 export { default as Textarea } from './Textarea';
 export { default as Card } from './Card';
 export { default as Modal } from './Modal';
-export { default as Table } from './Table';
+export { default as Table }     from './Table';
+export { default as DataTable } from './DataTable';
+export { default as RichTextEditor } from './RichTextEditor';

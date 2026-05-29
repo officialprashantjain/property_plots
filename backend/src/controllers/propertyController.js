@@ -168,6 +168,37 @@ exports.updateProperty = async (req, res) => {
     }
 
     processPropertyData(req);
+
+    // Deep merge media to prevent overwriting existing files
+    const currentMedia = property.media ? (property.media.toObject ? property.media.toObject() : property.media) : {};
+    const updatedMedia = { ...currentMedia, ...(req.body.media || {}) };
+
+    // Handle string based videoUrl 
+    if (req.body['media.videoUrl'] !== undefined) {
+      updatedMedia.videoUrl = req.body['media.videoUrl'];
+      delete req.body['media.videoUrl'];
+    }
+    
+    // Explicitly handle "kept" existing media sent from frontend
+    if (req.body.existingPrimary) {
+      updatedMedia.primaryImage = req.body.existingPrimary;
+    }
+    if (req.body.existingGallery) {
+      try {
+        const keptGallery = JSON.parse(req.body.existingGallery);
+        // Combine kept images with newly appended ones
+        updatedMedia.gallery = [...keptGallery, ...(req.body.media?.gallery || [])];
+      } catch (e) { }
+    } else if (req.body.media?.gallery) {
+      // If new gallery sent but no existing gallery referenced, just append
+      updatedMedia.gallery = [...(currentMedia.gallery || []), ...req.body.media.gallery];
+    } else if (!req.body.media?.gallery && req.body.existingGallery === '[]') {
+       // Frontend deleted all existing gallery
+       updatedMedia.gallery = [];
+    }
+
+    req.body.media = updatedMedia;
+
     Object.assign(property, req.body);
     const updated = await property.save();
     res.status(200).json(updated);
