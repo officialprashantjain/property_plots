@@ -75,6 +75,11 @@ export default function AgentForm({ mode = 'add', agentId = null }) {
     if (!name.trim()) errors.name = 'Name is required.';
     if (!designation.trim()) errors.designation = 'Designation is required.';
     if (mode === 'add' && !imageFile) errors.image = 'Profile image is required.';
+    
+    if (phone && !/^\d{10}$/.test(phone)) {
+      errors.phone = 'Phone number must be exactly 10 digits.';
+    }
+    
     return errors;
   };
 
@@ -220,8 +225,12 @@ export default function AgentForm({ mode = 'add', agentId = null }) {
               <Input
                 label="Phone Number"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="e.g. +1 234 567 890"
+                onChange={(e) => {
+                  const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  setPhone(val);
+                }}
+                placeholder="e.g. 9876543210"
+                error={fieldErrors.phone}
               />
               <Input
                 label="Email Address"

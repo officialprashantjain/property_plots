@@ -248,13 +248,13 @@ export default function ViewAgentPage() {
             </div>
           </Card>
 
-          <Card className="p-6 bg-primary/5 border-primary/10">
+          {/* <Card className="p-6 bg-primary/5 border-primary/10">
             <h3 className="text-sm font-bold text-primary mb-2">Internal Note</h3>
             <p className="text-sm text-muted-dark leading-relaxed">
               This agent profile is currently <strong>{agent.isActive ? 'visible' : 'hidden'}</strong> on the public website. 
               The display priority is set to <strong>{agent.order}</strong>. You can change these settings by clicking the edit button above.
             </p>
-          </Card>
+          </Card> */}
         </div>
       </div>
 

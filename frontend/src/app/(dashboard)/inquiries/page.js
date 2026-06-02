@@ -15,10 +15,14 @@ export default function InquiriesPage() {
   const [deleting, setDeleting] = useState(false);
   const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
 
-  const fetchInquiries = async (page = 1) => {
+  const fetchInquiries = async (page = 1, keyword = '') => {
     try {
       setIsLoading(true);
-      const data = await contactService.getAll({ page, limit: pagination.limit });
+      const data = await contactService.getAll({ 
+        page, 
+        limit: pagination.limit,
+        keyword 
+      });
       setInquiries(data.contacts || []);
       setPagination(prev => ({
         ...prev,
@@ -186,6 +190,9 @@ export default function InquiriesPage() {
         columns={columns}
         data={inquiries}
         isLoading={isLoading}
+        searchable={true}
+        searchPlaceholder="Search by name, email, phone or message..."
+        onSearch={(query) => fetchInquiries(1, query)}
         onRowClick={(row) => router.push(`/inquiries/view/${row.id || row._id}`)}
         emptyMessage="No inquiries found yet."
       />

@@ -4,9 +4,9 @@ const BASE = '/contacts';
 
 const contactService = {
   /** Admin — fetch all inquiries with pagination */
-  async getAll({ page = 1, limit = 20, isRead, status } = {}) {
+  async getAll({ page = 1, limit = 20, isRead, status, keyword } = {}) {
     const res = await axiosInstance.get(`${BASE}/admin/all`, {
-      params: { page, limit, isRead, status },
+      params: { page, limit, isRead, status, keyword },
     });
     return res.data; // { total, page, pages, contacts }
   },

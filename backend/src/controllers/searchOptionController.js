@@ -58,7 +58,7 @@ exports.updateOption = async (req, res) => {
       return res.status(404).json({ message: "Search option not found" });
     }
 
-    if (value) option.value = value;
+    if (value !== undefined) option.value = value;
 
     const updatedOption = await option.save();
     res.status(200).json(updatedOption);

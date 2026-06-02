@@ -70,7 +70,13 @@ exports.getProperties = async (req, res) => {
 
     const filter = { isActive: true, status: "active" };
 
-    if (keyword) filter.title = { $regex: keyword, $options: "i" };
+    if (keyword) {
+      filter.$or = [
+        { title: { $regex: keyword, $options: "i" } },
+        { propertyType: { $regex: keyword, $options: "i" } },
+        { location: { $regex: keyword, $options: "i" } }
+      ];
+    }
     if (propertyType) filter.propertyType = propertyType;
     if (location) filter.location = location;
     if (priceRange) filter.priceRange = priceRange;

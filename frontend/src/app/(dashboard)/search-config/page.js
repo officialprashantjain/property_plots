@@ -48,10 +48,19 @@ export default function SearchConfigPage() {
       setIsLoading(false);
     }
   };
-
   useEffect(() => {
     fetchOptions();
   }, []);
+
+  const getPlaceholder = () => {
+    switch(formData.category) {
+      case 'propertyType': return 'e.g. Apartment, Villa, Office';
+      case 'location': return 'e.g. Business Bay, Downtown, Indore';
+      case 'priceRange': return 'e.g. 1M - 2M, 500k - 1M';
+      case 'plotSize': return 'e.g. 1000 - 2000 sqft, 500 - 1000 sqft';
+      default: return 'Enter value...';
+    }
+  };
 
   // --- Add / Edit Modal ---
   const handleOpenModal = (opt = null) => {
@@ -253,7 +262,7 @@ export default function SearchConfigPage() {
 
           <Input
             label="Value"
-            placeholder="e.g. 1000 - 2000 sqft"
+            placeholder={getPlaceholder()}
             value={formData.value}
             onChange={(e) => setFormData({ ...formData, value: e.target.value })}
             required

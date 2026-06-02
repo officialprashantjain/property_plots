@@ -38,10 +38,20 @@ exports.getContactConfig = async (req, res) => {
 // @route   GET /api/admin/contacts
 exports.getAdminContacts = async (req, res) => {
   try {
-    const { page = 1, limit = 20, isRead, status } = req.query;
+    const { page = 1, limit = 20, isRead, status, keyword } = req.query;
     const filter = {};
     if (isRead !== undefined) filter.isRead = isRead === 'true';
     if (status) filter.status = status;
+
+    if (keyword) {
+      filter.$or = [
+        { name: { $regex: keyword, $options: "i" } },
+        { email: { $regex: keyword, $options: "i" } },
+        { phone: { $regex: keyword, $options: "i" } },
+        { inquiryType: { $regex: keyword, $options: "i" } },
+        { message: { $regex: keyword, $options: "i" } }
+      ];
+    }
 
     const skip = (Number(page) - 1) * Number(limit);
     const total = await Contact.countDocuments(filter);
