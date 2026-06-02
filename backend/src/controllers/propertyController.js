@@ -74,7 +74,8 @@ exports.getProperties = async (req, res) => {
       filter.$or = [
         { title: { $regex: keyword, $options: "i" } },
         { propertyType: { $regex: keyword, $options: "i" } },
-        { location: { $regex: keyword, $options: "i" } }
+        { location: { $regex: keyword, $options: "i" } },
+        { descriptionHtml: { $regex: keyword, $options: "i" } }
       ];
     }
     if (propertyType) filter.propertyType = propertyType;
@@ -141,11 +142,22 @@ exports.createProperty = async (req, res) => {
 // @route   GET /api/admin/properties
 exports.getAdminProperties = async (req, res) => {
   try {
-    const { page = 1, limit = 20 } = req.query;
-    const skip = (Number(page) - 1) * Number(limit);
-    const total = await Property.countDocuments();
+    const { page = 1, limit = 20, keyword } = req.query;
+    
+    const filter = { isActive: true };
+    if (keyword) {
+      filter.$or = [
+        { title: { $regex: keyword, $options: "i" } },
+        { propertyType: { $regex: keyword, $options: "i" } },
+        { location: { $regex: keyword, $options: "i" } },
+        { descriptionHtml: { $regex: keyword, $options: "i" } }
+      ];
+    }
 
-    const properties = await Property.find()
+    const skip = (Number(page) - 1) * Number(limit);
+    const total = await Property.countDocuments(filter);
+
+    const properties = await Property.find(filter)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));

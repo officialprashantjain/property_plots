@@ -4,9 +4,9 @@ const BASE = '/properties';
 
 const propertyService = {
   /** Admin — fetch all (incl. drafts) with pagination */
-  async getAll({ page = 1, limit = 20 } = {}) {
+  async getAll({ page = 1, limit = 20, keyword = '' } = {}) {
     const res = await axiosInstance.get(`${BASE}/admin/all`, {
-      params: { page, limit },
+      params: { page, limit, keyword },
     });
     return res.data; // { total, page, pages, properties }
   },

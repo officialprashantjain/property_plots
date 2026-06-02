@@ -6,7 +6,7 @@ const seedAdmin = async () => {
     
     if (!adminExists) {
       await Admin.create({
-        email: 'propertyadmin@gmail.com',
+        email: 'propertyadmin@yopmail.com',
         password: 'Admin123',
         role: 'admin'
       });

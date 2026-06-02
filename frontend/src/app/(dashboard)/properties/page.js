@@ -231,8 +231,8 @@ export default function PropertiesPage() {
         data={properties}
         isLoading={isLoading}
         searchable={true}
-        searchPlaceholder="Search title, location or type..."
-        searchKeys={['title', 'location', 'propertyType', 'status']}
+        searchPlaceholder="Search title, location, type or description..."
+        searchKeys={['title', 'location', 'propertyType', 'status', 'descriptionHtml']}
         sortable={true}
         paginated={true}
         pageSize={10}

@@ -4,6 +4,7 @@ const Input = forwardRef(({
   label,
   error,
   iconLeft,
+  iconRight,
   type = 'text',
   className = '',
   id,
@@ -30,10 +31,16 @@ const Input = forwardRef(({
           type={type}
           className={`w-full px-4 py-2.5 rounded-lg border bg-background text-sm text-foreground focus:outline-none focus:ring-2 transition-colors placeholder:text-muted-dark
             ${iconLeft ? 'pl-10' : ''}
+            ${iconRight ? 'pr-10' : ''}
             ${error ? 'border-danger focus:ring-danger' : 'border-border focus:ring-primary'}
           `}
           {...props}
         />
+        {iconRight && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-muted-dark">
+            {iconRight}
+          </div>
+        )}
       </div>
       {error && (
         <p className="mt-1 text-xs text-danger font-medium">{error}</p>

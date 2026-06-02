@@ -54,4 +54,21 @@ propertySchema.pre('save', function (next) {
   next();
 });
 
+propertySchema.index({ 
+  title: 'text', 
+  descriptionHtml: 'text', 
+  location: 'text', 
+  propertyType: 'text',
+  features: 'text'
+}, {
+  weights: {
+    title: 10,
+    location: 5,
+    propertyType: 3,
+    descriptionHtml: 2,
+    features: 1
+  },
+  name: "PropertyTextIndex"
+});
+
 module.exports = mongoose.model('Property', propertySchema);
