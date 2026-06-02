@@ -251,7 +251,7 @@ export default function PropertyForm({ mode = 'add', propertyId = null }) {
           label={<>Title <span className="text-danger">*</span></>}
           value={title}
           onChange={(e) => { setTitle(e.target.value); if (fieldErrors.title) setFieldErrors(p => ({...p, title: ''})); }}
-          placeholder="e.g., Luxury Villa in West Coast"
+          placeholder="e.g., Luxury Villa in VIjay Nagar"
           error={fieldErrors.title}
         />
 

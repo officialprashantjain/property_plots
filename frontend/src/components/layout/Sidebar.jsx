@@ -16,7 +16,9 @@ import {
   Settings, 
   LogOut,
   X,
-  Search
+  Search,
+  Users,
+  MessageSquare
 } from "lucide-react";
 
 const navItems = [
@@ -26,6 +28,8 @@ const navItems = [
       { label: "Dashboard", href: "/", icon: LayoutDashboard },
       { label: "Search Config", href: "/search-config", icon: Search },
       { label: "Properties", href: "/properties", icon: Home },
+      { label: "Agents", href: "/agents", icon: Users },
+      { label: "Inquiries", href: "/inquiries", icon: MessageSquare },
     ],
   },
   {

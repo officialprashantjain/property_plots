@@ -8,6 +8,7 @@ export default function Modal({
   onClose,
   title,
   children,
+  footer,
   maxWidth = 'max-w-md' // e.g. max-w-sm, max-w-lg, max-w-2xl
 }) {
   // Prevent background scrolling when modal is open
@@ -34,6 +35,7 @@ export default function Modal({
         <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
           <h3 className="text-lg font-bold text-foreground">{title}</h3>
           <button 
+            type="button"
             onClick={onClose}
             className="text-muted hover:text-foreground transition-colors p-1 rounded-md hover:bg-background"
           >
@@ -45,6 +47,13 @@ export default function Modal({
         <div className="px-6 py-5 overflow-y-auto">
           {children}
         </div>
+
+        {/* Footer */}
+        {footer && (
+          <div className="px-6 py-4 border-t border-border shrink-0 bg-background/50">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

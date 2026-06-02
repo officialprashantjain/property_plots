@@ -8,6 +8,8 @@ const authRoutes = require("../routes/authRoutes");
 const searchOptionRoutes = require("../routes/searchOptionRoutes");
 const propertyRoutes = require("../routes/propertyRoutes");
 const uploadRoutes = require("../routes/uploadRoutes");
+const agentRoutes = require("../routes/agentRoutes");
+const contactRoutes = require("../routes/contactRoutes");
 
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS || "*";
 
@@ -40,6 +42,8 @@ function userRoutes(app) {
   app.use("/api/search-options", searchOptionRoutes);
   app.use("/api/properties", propertyRoutes);
   app.use("/api/uploads", uploadRoutes);
+  app.use("/api/agents", agentRoutes);
+  app.use("/api/contacts", contactRoutes);
 }
 
 module.exports = {
