@@ -14,11 +14,22 @@ export default function AgentsPage() {
   const [deleteTarget, setDeleteTarget] = useState(null); // { id, name }
   const [deleting, setDeleting] = useState(false);
 
+  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState('');
+  const [debouncedKeyword, setDebouncedKeyword] = useState('');
+  const [totalRows, setTotalRows] = useState(0);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedKeyword(keyword), 500);
+    return () => clearTimeout(timer);
+  }, [keyword]);
+
   const fetchAgents = async () => {
     try {
       setIsLoading(true);
-      const data = await agentService.getAll({ page: 1, limit: 100 });
+      const data = await agentService.getAll({ page, limit: 10, keyword: debouncedKeyword });
       setAgents(data.agents || []);
+      setTotalRows(data.total || 0);
     } catch (err) {
       console.error('Failed to fetch agents:', err);
       setError('Failed to fetch agents. Please check your connection.');
@@ -43,8 +54,9 @@ export default function AgentsPage() {
   };
 
   useEffect(() => {
+     // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchAgents();
-  }, []);
+  }, [page, debouncedKeyword]);
 
   const columns = [
     {
@@ -191,6 +203,15 @@ export default function AgentsPage() {
         columns={columns}
         data={agents}
         isLoading={isLoading}
+        searchable={true}
+        serverSide={true}
+        totalRows={totalRows}
+        currentPage={page}
+        onPageChange={(p) => setPage(p)}
+        searchPlaceholder="Search agents by name, phone or designation..."
+        onSearch={(query) => { setKeyword(query); setPage(1); }}
+        paginated={true}
+        pageSize={10}
         onRowClick={(row) => router.push(`/agents/view/${row.id || row._id}`)}
         emptyMessage="No agents found. Click 'Add Agent' to create one."
       />
@@ -223,7 +244,7 @@ export default function AgentsPage() {
       >
         <p className="text-foreground">
           Are you sure you want to delete <span className="font-bold">{deleteTarget?.name}</span>? 
-          This action cannot be undone and the agent's image will also be removed.
+          This action cannot be undone and the agent&apos;s image will also be removed.
         </p>
       </Modal>
     </div>

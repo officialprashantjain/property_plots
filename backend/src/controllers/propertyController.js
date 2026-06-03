@@ -75,6 +75,8 @@ exports.getProperties = async (req, res) => {
         { title: { $regex: keyword, $options: "i" } },
         { propertyType: { $regex: keyword, $options: "i" } },
         { location: { $regex: keyword, $options: "i" } },
+        { priceRange: { $regex: keyword, $options: "i" } },
+        { plotSize: { $regex: keyword, $options: "i" } },
         { descriptionHtml: { $regex: keyword, $options: "i" } }
       ];
     }
@@ -150,6 +152,8 @@ exports.getAdminProperties = async (req, res) => {
         { title: { $regex: keyword, $options: "i" } },
         { propertyType: { $regex: keyword, $options: "i" } },
         { location: { $regex: keyword, $options: "i" } },
+        { priceRange: { $regex: keyword, $options: "i" } },
+        { plotSize: { $regex: keyword, $options: "i" } },
         { descriptionHtml: { $regex: keyword, $options: "i" } }
       ];
     }
@@ -303,8 +307,27 @@ exports.bulkUploadProperties = async (req, res) => {
 
       let features = [];
       let faqs = [];
-      try { if (row.features) features = JSON.parse(row.features); } catch(e){}
-      try { if (row.faqs) faqs = JSON.parse(row.faqs); } catch(e){}
+      
+      if (row.features) {
+        try { 
+          features = JSON.parse(row.features); 
+          if (!Array.isArray(features)) throw new Error('Not array');
+        } catch(e) {
+          features = String(row.features).split(',').map(f => f.trim()).filter(f => f);
+        }
+      }
+
+      if (row.faqs) {
+        try { 
+          faqs = JSON.parse(row.faqs); 
+          if (!Array.isArray(faqs)) throw new Error('Not array');
+        } catch(e) {
+          faqs = String(row.faqs).split(';').map(f => {
+            const [q, a] = f.split('|');
+            return (q && a) ? { question: q.trim(), answer: a.trim() } : null;
+          }).filter(f => f);
+        }
+      }
 
       let slug = '';
       if (row.title) {

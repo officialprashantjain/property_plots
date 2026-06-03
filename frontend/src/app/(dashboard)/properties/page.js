@@ -11,16 +11,29 @@ export default function PropertiesPage() {
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [deleteTarget, setDeleteTarget] = useState(null); // { id, title }
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  
+  // Server-side pagination and search state
+  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState('');
+  const [debouncedKeyword, setDebouncedKeyword] = useState('');
+  const [totalRows, setTotalRows] = useState(0);
 
-
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword);
+    }, 500); // 500ms debounce
+    return () => clearTimeout(timer);
+  }, [keyword]);
 
   const fetchProperties = async () => {
+    setIsLoading(true);
     try {
-      const data = await propertyService.getAll({ page: 1, limit: 200 });
+      const data = await propertyService.getAll({ page, limit: 10, keyword: debouncedKeyword });
       const items = Array.isArray(data) ? data : data.properties || data.data || [];
       setProperties(items);
+      setTotalRows(data.total || 0);
     } catch (err) {
       console.error('Failed to fetch properties:', err);
       setError('Failed to fetch properties. Please check your connection.');
@@ -44,9 +57,10 @@ export default function PropertiesPage() {
       setDeleting(false);
     }
   };
-    useEffect(() => {
+  useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProperties();
-  }, []);
+  }, [page, debouncedKeyword]);
 
   const columns = [
     // {
@@ -231,12 +245,18 @@ export default function PropertiesPage() {
         data={properties}
         isLoading={isLoading}
         searchable={true}
-        searchPlaceholder="Search title, location, type or description..."
-        searchKeys={['title', 'location', 'propertyType', 'status', 'descriptionHtml']}
-        sortable={true}
+        searchPlaceholder="Search properties..."
+        serverSide={true}
+        totalRows={totalRows}
+        currentPage={page}
+        onPageChange={(newPage) => setPage(newPage)}
+        onSearch={(val) => {
+          setKeyword(val);
+          setPage(1);
+        }}
+        sortable={false} // Server-side sorting not yet implemented
         paginated={true}
         pageSize={10}
-        pageSizeOptions={[10, 25, 50]}
         emptyMessage="No properties found. Add a new one to get started."
         emptyIcon="🏢"
         className="w-full shadow-sm"

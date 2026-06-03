@@ -38,10 +38,20 @@ const processAgentData = (req) => {
 // @route   GET /api/agents
 exports.getAgents = async (req, res) => {
   try {
-    const { page = 1, limit = 12 } = req.query;
+    const { page = 1, limit = 12, keyword } = req.query;
     const skip = (Number(page) - 1) * Number(limit);
     
     const filter = { isActive: true };
+    if (keyword) {
+      filter.$or = [
+        { name: { $regex: keyword, $options: "i" } },
+        { designation: { $regex: keyword, $options: "i" } },
+        { phone: { $regex: keyword, $options: "i" } },
+        { email: { $regex: keyword, $options: "i" } },
+        { department: { $regex: keyword, $options: "i" } }
+      ];
+    }
+    
     const total = await Agent.countDocuments(filter);
     
     const agents = await Agent.find(filter)
@@ -64,12 +74,23 @@ exports.getAgents = async (req, res) => {
 // @route   GET /api/admin/agents
 exports.getAdminAgents = async (req, res) => {
   try {
-    const { page = 1, limit = 20 } = req.query;
+    const { page = 1, limit = 20, keyword } = req.query;
     const skip = (Number(page) - 1) * Number(limit);
     
-    const total = await Agent.countDocuments();
+    const filter = {};
+    if (keyword) {
+      filter.$or = [
+        { name: { $regex: keyword, $options: "i" } },
+        { designation: { $regex: keyword, $options: "i" } },
+        { phone: { $regex: keyword, $options: "i" } },
+        { email: { $regex: keyword, $options: "i" } },
+        { department: { $regex: keyword, $options: "i" } }
+      ];
+    }
     
-    const agents = await Agent.find()
+    const total = await Agent.countDocuments(filter);
+    
+    const agents = await Agent.find(filter)
       .sort({ order: 1, createdAt: -1 })
       .skip(skip)
       .limit(Number(limit));

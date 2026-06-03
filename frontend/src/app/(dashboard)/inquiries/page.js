@@ -13,23 +13,27 @@ export default function InquiriesPage() {
   const [error, setError] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null); // { id, name }
   const [deleting, setDeleting] = useState(false);
-  const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0, pages: 1 });
+  
+  const [page, setPage] = useState(1);
+  const [keyword, setKeyword] = useState('');
+  const [debouncedKeyword, setDebouncedKeyword] = useState('');
+  const [totalRows, setTotalRows] = useState(0);
 
-  const fetchInquiries = async (page = 1, keyword = '') => {
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedKeyword(keyword), 500);
+    return () => clearTimeout(timer);
+  }, [keyword]);
+
+  const fetchInquiries = async () => {
     try {
       setIsLoading(true);
       const data = await contactService.getAll({ 
         page, 
-        limit: pagination.limit,
-        keyword 
+        limit: 10,
+        keyword: debouncedKeyword
       });
       setInquiries(data.contacts || []);
-      setPagination(prev => ({
-        ...prev,
-        page: data.page,
-        total: data.total,
-        pages: data.pages
-      }));
+      setTotalRows(data.total || 0);
     } catch (err) {
       console.error('Failed to fetch inquiries:', err);
       setError('Failed to load inquiries. Please try again.');
@@ -44,7 +48,7 @@ export default function InquiriesPage() {
       setDeleting(true);
       await contactService.remove(deleteTarget.id);
       setDeleteTarget(null);
-      fetchInquiries(pagination.page);
+      fetchInquiries();
     } catch (err) {
       console.error('Delete error:', err);
       setError('Failed to delete inquiry.');
@@ -54,8 +58,9 @@ export default function InquiriesPage() {
   };
 
   useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchInquiries();
-  }, []);
+  }, [page, debouncedKeyword]);
 
   const columns = [
     {
@@ -161,7 +166,7 @@ export default function InquiriesPage() {
         <div className="flex items-center gap-3">
           <Button 
             variant="outline" 
-            onClick={() => fetchInquiries(pagination.page)}
+            onClick={() => fetchInquiries()}
             disabled={isLoading}
             className="flex items-center gap-2"
           >
@@ -191,8 +196,14 @@ export default function InquiriesPage() {
         data={inquiries}
         isLoading={isLoading}
         searchable={true}
+        serverSide={true}
+        totalRows={totalRows}
+        currentPage={page}
+        onPageChange={(p) => setPage(p)}
         searchPlaceholder="Search by name, email, phone or message..."
-        onSearch={(query) => fetchInquiries(1, query)}
+        onSearch={(query) => { setKeyword(query); setPage(1); }}
+        paginated={true}
+        pageSize={10}
         onRowClick={(row) => router.push(`/inquiries/view/${row.id || row._id}`)}
         emptyMessage="No inquiries found yet."
       />

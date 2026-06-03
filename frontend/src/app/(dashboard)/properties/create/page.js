@@ -193,7 +193,7 @@ export default function CreatePropertyPage() {
                   <p className="text-lg font-semibold text-foreground">
                     {isDragging ? 'Drop your file here' : 'Drag & Drop your spreadsheet'}
                   </p>
-                  <p className="text-sm text-muted mt-1">Accepts <strong>.csv</strong>, <strong>.xls</strong>, and <strong>.xlsx</strong> files</p>
+                  <p className="text-sm text-muted mt-1">Accepts<strong>.xls</strong>, and <strong>.xlsx</strong> files</p>
                 </div>
                 <span className="text-xs text-muted/60 border border-border rounded-full px-4 py-1">or click to browse files</span>
               </div>
@@ -202,11 +202,15 @@ export default function CreatePropertyPage() {
 
           {/* Action Row */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
-            {/* <div className="flex gap-4 text-sm">
-              <a href="#" className="text-primary hover:underline font-medium">Download CSV Template</a>
-              <span className="text-border">|</span>
-              <a href="#" className="text-primary hover:underline font-medium">Download Excel Template</a>
-            </div> */}
+            <div className="flex gap-4 text-sm">
+              <a 
+                href="/templates/property_upload_template.xlsx" 
+                download="property_upload_template.xlsx" 
+                className="text-primary hover:underline font-medium"
+              >
+                Download Excel Template
+              </a>
+            </div>
             <Button
               onClick={handleUpload}
               disabled={!bulkFile || uploading}

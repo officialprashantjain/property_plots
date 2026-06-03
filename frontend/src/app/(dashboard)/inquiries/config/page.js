@@ -95,7 +95,7 @@ export default function ContactConfigPage() {
             <h3 className="text-lg font-bold text-foreground flex items-center gap-2">
               <ImageIcon size={20} className="text-primary" /> Sidebar Banner Image
             </h3>
-            <p className="text-sm text-muted">This image appears on the right side of the "Send Us a Message" form on your website.</p>
+            <p className="text-sm text-muted">This image appears on the right side of the Send Us a Message form on your website.</p>
           </div>
 
           <div className="flex flex-col items-center justify-center gap-6">

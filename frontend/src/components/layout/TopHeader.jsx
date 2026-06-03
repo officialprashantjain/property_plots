@@ -6,7 +6,7 @@ import contactService from "@/services/contactService";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function TopHeader({ title = "Dashboard", onMenuClick }) {
+export default function TopHeader({ title = "", onMenuClick }) {
   const router = useRouter();
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -40,8 +40,8 @@ export default function TopHeader({ title = "Dashboard", onMenuClick }) {
   };
 
   useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchNotifications();
-    // Refresh every 2 minutes
     const interval = setInterval(fetchNotifications, 120000);
     return () => clearInterval(interval);
   }, []);

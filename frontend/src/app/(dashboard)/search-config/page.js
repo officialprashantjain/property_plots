@@ -49,6 +49,7 @@ export default function SearchConfigPage() {
     }
   };
   useEffect(() => {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchOptions();
   }, []);
 

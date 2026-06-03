@@ -126,7 +126,7 @@ export default function PropertyForm({ mode = 'add', propertyId = null }) {
       if (priceRange) formData.append('priceRange', priceRange);
       if (plotSize) formData.append('plotSize', plotSize);
       if (area) formData.append('area', area);
-      if (descriptionHtml) formData.append('descriptionHtml', descriptionHtml);
+      formData.append('descriptionHtml', descriptionHtml);
       if (videoUrl) formData.append('media.videoUrl', videoUrl);
 
       // JSON stringify complex arrays for safety if backend expects parsed JSON,
