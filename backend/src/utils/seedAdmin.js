@@ -7,7 +7,7 @@ const seedAdmin = async () => {
     if (!adminExists) {
       await Admin.create({
         email: 'propertyadmin@yopmail.com',
-        password: 'Admin123',
+        password: 'Admin@123',
         role: 'admin'
       });
       console.log('Seed: Initial admin user created successfully.');

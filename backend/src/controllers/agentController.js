@@ -6,7 +6,6 @@ const processAgentData = (req) => {
     try {
       req.body.socialLinks = JSON.parse(req.body.socialLinks);
     } catch (e) {
-      // Fallback
     }
   }
 
@@ -15,8 +14,7 @@ const processAgentData = (req) => {
   }
 };
 
-// @desc    Get all active agents (Public)
-// @route   GET /api/agents
+
 exports.getAgents = async (req, res) => {
   try {
     const { page = 1, limit = 12, keyword } = req.query;
@@ -51,8 +49,7 @@ exports.getAgents = async (req, res) => {
   }
 };
 
-// @desc    Get all agents (Admin)
-// @route   GET /api/admin/agents
+
 exports.getAdminAgents = async (req, res) => {
   try {
     const { page = 1, limit = 20, keyword } = req.query;
@@ -87,8 +84,7 @@ exports.getAdminAgents = async (req, res) => {
   }
 };
 
-// @desc    Create a new agent (Admin)
-// @route   POST /api/admin/agents
+
 exports.createAgent = async (req, res) => {
   try {
     processAgentData(req);
@@ -99,8 +95,7 @@ exports.createAgent = async (req, res) => {
   }
 };
 
-// @desc    Update an agent (Admin)
-// @route   PUT /api/admin/agents/:id
+
 exports.updateAgent = async (req, res) => {
   try {
     const agent = await Agent.findById(req.params.id);
@@ -127,8 +122,7 @@ exports.updateAgent = async (req, res) => {
   }
 };
 
-// @desc    Delete an agent (Admin)
-// @route   DELETE /api/admin/agents/:id
+
 exports.deleteAgent = async (req, res) => {
   try {
     const agent = await Agent.findById(req.params.id);
@@ -150,8 +144,7 @@ exports.deleteAgent = async (req, res) => {
   }
 };
 
-// @desc    Get agent by ID (Admin)
-// @route   GET /api/admin/agents/:id
+
 exports.getAgentById = async (req, res) => {
   try {
     const agent = await Agent.findById(req.params.id);

@@ -17,7 +17,7 @@ async function start() {
   }
   
   server = app.listen(env.port, () => {
-    console.log(`Server running at http://localhost:${env.port}`);
+    console.log(`Server running at ${env.baseUrl}`);
   });
   
   return server;
