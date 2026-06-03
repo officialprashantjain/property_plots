@@ -2,21 +2,59 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
+const { S3Client, DeleteObjectCommand } = require('@aws-sdk/client-s3');
+const multerS3 = require('multer-s3');
+const env = require('../config/env');
 
-const UPLOAD_DIR = path.join(__dirname, '../../public/uploads');
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
+// Configure S3 Client
+const s3Config = new S3Client({
+  region: env.aws.region,
+  credentials: {
+    accessKeyId: env.aws.accessKeyId,
+    secretAccessKey: env.aws.secretAccessKey,
+  }
+});
 
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, UPLOAD_DIR),
-  filename: (_req, file, cb) => {
+exports.deleteFromS3 = async (url) => {
+  if (!url) return;
+  try {
+    // Extract key from URL
+    // e.g., https://bucket.s3.region.amazonaws.com/uploads/123-abc.jpg
+    const bucketHostname = `${env.aws.bucketName}.s3.${env.aws.region}.amazonaws.com`;
+    let key;
+    if (url.includes(bucketHostname)) {
+      key = url.split(`${bucketHostname}/`)[1];
+    } else if (url.includes('.amazonaws.com/')) {
+      // General fallback
+      key = url.split('.amazonaws.com/')[1];
+    } else {
+      // Local URL or old setup (not S3), won't delete from S3
+      return;
+    }
+
+    if (key) {
+      await s3Config.send(new DeleteObjectCommand({
+        Bucket: env.aws.bucketName,
+        Key: key
+      }));
+    }
+  } catch (err) {
+    console.error(`Failed to delete S3 file: ${url}`, err);
+  }
+};
+
+const storage = multerS3({
+  s3: s3Config,
+  bucket: env.aws.bucketName,
+  // AWS S3 blocks ACLs by default now. Ensure Bucket Policy enables public read.
+  contentType: multerS3.AUTO_CONTENT_TYPE,
+  key: function (req, file, cb) {
     const randomStr = crypto.randomBytes(4).toString('hex');
     const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `${Date.now()}-${randomStr}${ext}`);
+    cb(null, `uploads/${Date.now()}-${randomStr}${ext}`);
   }
 });
 

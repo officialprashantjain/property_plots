@@ -96,7 +96,7 @@ export default function ViewAgentPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Profile Card */}
         <Card className="md:col-span-1 p-6 flex flex-col items-center text-center gap-4 h-fit">
-          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-primary/10 p-1">
+          <div className="w-32 h-32 shrink-0 mx-auto flex items-center justify-center rounded-full overflow-hidden border-4 border-primary/10 p-1">
             {agent.image ? (
               <img src={agent.image} alt={agent.name} className="w-full h-full object-cover rounded-full" />
             ) : (

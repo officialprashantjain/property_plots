@@ -1,9 +1,6 @@
 const Property = require("../models/Property");
 const env = require("../config/env");
-const fs = require("fs");
-const path = require("path");
-
-const buildUrl = (filename) => `${env.baseUrl}/uploads/${filename}`;
+const { deleteFromS3 } = require("../middleware/upload");
 
 const processPropertyData = (req) => {
   // Parse JSON strings for complex fields if they arrive as strings (common in multipart)
@@ -21,37 +18,15 @@ const processPropertyData = (req) => {
     if (!req.body.media) req.body.media = {};
 
     if (req.files.primaryImage && req.files.primaryImage[0]) {
-      req.body.media.primaryImage = buildUrl(
-        req.files.primaryImage[0].filename,
-      );
+      req.body.media.primaryImage = req.files.primaryImage[0].location;
     }
 
     if (req.files.gallery && req.files.gallery.length > 0) {
       req.body.media.gallery = req.files.gallery.map((file) =>
-        buildUrl(file.filename),
+        file.location
       );
     }
   }
-};
-
-const deleteFiles = (urls) => {
-  if (!urls) return;
-  const urlList = Array.isArray(urls) ? urls : [urls];
-
-  urlList.forEach((url) => {
-    if (!url) return;
-    try {
-      const filename = url.split("/uploads/")[1];
-      if (filename) {
-        const filePath = path.join(__dirname, "../../public/uploads", filename);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      }
-    } catch (err) {
-      console.error(`Failed to delete file: ${url}`, err);
-    }
-  });
 };
 
 // @desc    Get all properties with search & filter (Public)
@@ -241,9 +216,12 @@ exports.deleteProperty = async (req, res) => {
 
     // Capture image URLs before deleting record
     if (property.media) {
-      if (property.media.primaryImage) deleteFiles(property.media.primaryImage);
-      if (property.media.gallery && property.media.gallery.length > 0)
-        deleteFiles(property.media.gallery);
+      if (property.media.primaryImage) await deleteFromS3(property.media.primaryImage);
+      if (property.media.gallery && property.media.gallery.length > 0) {
+        for (const url of property.media.gallery) {
+           await deleteFromS3(url);
+        }
+      }
     }
 
     await Property.findByIdAndDelete(req.params.id);

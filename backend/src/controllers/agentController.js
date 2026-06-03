@@ -1,24 +1,5 @@
 const Agent = require("../models/Agent");
-const env = require("../config/env");
-const fs = require("fs");
-const path = require("path");
-
-const buildUrl = (filename) => `${env.baseUrl}/uploads/${filename}`;
-
-const deleteFile = (url) => {
-  if (!url) return;
-  try {
-    const filename = url.split("/uploads/")[1];
-    if (filename) {
-      const filePath = path.join(__dirname, "../../public/uploads", filename);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-    }
-  } catch (err) {
-    console.error(`Failed to delete file: ${url}`, err);
-  }
-};
+const { deleteFromS3 } = require("../middleware/upload");
 
 const processAgentData = (req) => {
   if (req.body.socialLinks && typeof req.body.socialLinks === "string") {
@@ -30,7 +11,7 @@ const processAgentData = (req) => {
   }
 
   if (req.file) {
-    req.body.image = buildUrl(req.file.filename);
+    req.body.image = req.file.location;
   }
 };
 
@@ -132,7 +113,7 @@ exports.updateAgent = async (req, res) => {
 
     // If a new image is uploaded, delete the old one
     if (req.file && oldImage) {
-      deleteFile(oldImage);
+      deleteFromS3(oldImage);
     }
 
     Object.assign(agent, req.body);
@@ -156,7 +137,7 @@ exports.deleteAgent = async (req, res) => {
     }
 
     if (agent.image) {
-      deleteFile(agent.image);
+      deleteFromS3(agent.image);
     }
 
     await Agent.findByIdAndDelete(req.params.id);

@@ -1,7 +1,5 @@
 const env = require('../config/env');
 
-const buildUrl = (filename) => `${env.baseUrl}/uploads/${filename}`;
-
 // @desc    Upload a single image
 // @route   POST /api/uploads/single
 // @access  Private/Admin
@@ -10,7 +8,7 @@ exports.uploadSingleImage = (req, res) => {
     return res.status(400).json({ success: false, message: 'No file uploaded' });
   }
 
-  const url = buildUrl(req.file.filename);
+  const url = req.file.location;
   res.status(200).json({
     success: true,
     message: 'Image uploaded successfully',
@@ -26,7 +24,7 @@ exports.uploadMultipleImages = (req, res) => {
     return res.status(400).json({ success: false, message: 'No files uploaded' });
   }
 
-  const urls = req.files.map(file => buildUrl(file.filename));
+  const urls = req.files.map(file => file.location);
   res.status(200).json({
     success: true,
     message: 'Images uploaded successfully',

@@ -1,8 +1,5 @@
 const Contact = require("../models/Contact");
 const ContactConfig = require("../models/ContactConfig");
-const env = require("../config/env");
-
-const buildUrl = (filename) => `${env.baseUrl}/uploads/${filename}`;
 
 // --- Public Endpoints ---
 
@@ -151,7 +148,7 @@ exports.updateContactConfig = async (req, res) => {
     }
 
     if (req.file) {
-      config.image = buildUrl(req.file.filename);
+      config.image = req.file.location;
     }
 
     // Handle other body fields if any
